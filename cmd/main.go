@@ -1,12 +1,74 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 
+	"github.com/gorilla/mux"
+	"github.com/hamideh/go_take_exam/routes"
 	_ "github.com/lib/pq"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+
+	// "gorm.io/driver/postgres"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	// "gorm.io/gorm"
 )
+
+// Define a struct to represent your database model
+type User struct {
+	ID   uint
+	Name string
+	Age  uint
+}
+
+func main() {
+	// Define the database configuration
+
+	// dsn := "postgres://hamiltoon:1234@localhost:5432/examtaker_db"
+	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// if err != nil {
+	// 	fmt.Println("Failed to connect to database:", err)
+	// 	return
+	// }
+
+	// dsn2 := url.URL{
+	// 	User:     url.UserPassword("hamiltoon", "1234"),
+	// 	Scheme:   "postgres",
+	// 	Host:     fmt.Sprintf("%s:%d", "localhost", "5432"),
+	// 	Path:     "examtaker_db",
+	// 	RawQuery: (&url.Values{"sslmode": []string{"disable"}}).Encode(),
+	// }
+	// db, err := gorm.Open("postgres", dsn2.String())
+	// // Ping the database to ensure the connection is established
+	// if sqlDB, err := db.DB(); err != nil {
+	// 	fmt.Println("Failed to get database instance:", err)
+	// 	return
+	// } else if err := sqlDB.Ping(); err != nil {
+	// 	fmt.Println("Failed to ping database:", err)
+	// 	return
+	// }
+
+	// fmt.Println("Database connection established successfully")
+
+	// Migrate the schema (automatically create the table based on the model)
+	// db.AutoMigrate(&User{})
+
+	// Perform database operations (e.g., CRUD operations)
+	// For example:
+	// var users []User
+	// db.Find(&users)
+
+	// Close the underlying database connection when you're done
+	// sqlDB, err := db.DB()
+	// if err != nil {
+	// 	fmt.Println("Failed to get database instance:", err)
+	// 	return
+	// }
+	// sqlDB.Close()
+	r := mux.NewRouter()
+	routes.RegisterExamTaker(r)
+	http.Handle("/", r)
+	log.Fatal(http.ListenAndServe("localhost:9010", r))
+}
 
 // type application struct {
 // 	appName string
@@ -23,53 +85,6 @@ import (
 // 	port string
 // 	url  string
 // }
-
-// Define a struct to represent your database model
-type User struct {
-	ID   uint
-	Name string
-	Age  uint
-}
-
-func main() {
-	// Define the database configuration
-	dsn := "user=hamiltoon password=1234 dbname=examtaker_db host=localhost port=5432 sslmode=disable TimeZone=UTC"
-
-	// Open a connection to the PostgreSQL database
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("Failed to connect to database:", err)
-		return
-	}
-
-	// Ping the database to ensure the connection is established
-	if sqlDB, err := db.DB(); err != nil {
-		fmt.Println("Failed to get database instance:", err)
-		return
-	} else if err := sqlDB.Ping(); err != nil {
-		fmt.Println("Failed to ping database:", err)
-		return
-	}
-
-	fmt.Println("Database connection established successfully")
-
-	// Migrate the schema (automatically create the table based on the model)
-	db.AutoMigrate(&User{})
-
-	// Perform database operations (e.g., CRUD operations)
-	// For example:
-	// var users []User
-	// db.Find(&users)
-
-	// Close the underlying database connection when you're done
-	sqlDB, err := db.DB()
-	if err != nil {
-		fmt.Println("Failed to get database instance:", err)
-		return
-	}
-	sqlDB.Close()
-
-}
 
 // func main() {
 // 	// Replace the connection details (user, dbname, password, host) with your own

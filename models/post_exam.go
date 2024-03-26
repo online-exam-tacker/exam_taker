@@ -1,29 +1,10 @@
-// package models
-
-// import(
-// 	"gorm.io/driver/postgres"
-//     "gorm.io/gorm"
-// )
-
-// type User struct {
-//     gorm.Model
-//     Name string
-//     Age  int
-// }
-
-//	func createUser(db *gorm.DB, name string, age int) error {
-//	    user := User{Name: name, Age: age}
-//	    result := db.Create(&user)
-//	    if result.Error != nil {
-//	        return result.Error
-//	    }
-//	    return nil
-//	}
 package models
 
 import (
+	"log"
+
 	"github.com/hamideh/go_take_exam/config"
-	"gorm.io/gorm"
+	"github.com/jinzhu/gorm"
 )
 
 var db *gorm.DB
@@ -41,60 +22,65 @@ func init() {
 	db.AutoMigrate(&Book{})
 }
 
-// func (b *Book) CreateBook() *Book {
-// 	db.NewRecord(b)
-// 	db.Create(&b)
-// 	return b
-// }
-
-// func GetBooks() []Book {
-// 	var Books []Book
-// 	db.Find(&Books)
-// 	return Books
-// }
-
-// func GetBookById(Id int64) (*Book, *gorm.DB) {
-// 	var getBook Book
-// 	db := db.Where("ID=?", Id).Find(&getBook)
-// 	return &getBook, db
-// }
-
-// func DeleteBook(ID int64) Book {
-// 	var book Book
-// 	db.Where("ID=?", ID).Delete(book)
-// 	return book
-// }
-
 type Exam struct {
-	id         string
-	questions  Questions
-	collection Collection
-	answer     Options
+	gorm.Model
+	id         string     `gorm:"" json:"id"`
+	questions  Questions  `json:"questions"`
+	collection Collection `json:"collection"`
+	answer     Options    `json:"answer"`
 }
 
 type Questions struct {
-	question string
-	answer   Options
+	gorm.Model
+	id       string  `json:"id"`
+	question string  `json:"question"`
+	answer   Options `json:"answer"`
 }
 
 type Options struct {
-	op1 string
-	op2 string
-	op3 string
-	op4 string
+	gorm.Model
+	op1 string `json:"op1"`
+	op2 string `json:"op2"`
+	op3 string `json:"op3"`
+	op4 string `json:"op4"`
 }
 
 type Collection struct {
-	id   string
-	name string
+	gorm.Model
+	id   string `gorm:"" json:"id"`
+	name string ` json:"name"`
 }
 
-func createExam(db *gorm.DB, questions Questions, collection Collection, answer Options) error {
-	exam := Exam{questions: questions, collection: collection, answer: answer}
+func (e *Exam) CreateExam() *Exam {
+	exam := Exam{questions: e.questions, collection: e.collection, answer: e.answer}
 
 	result := db.Create(&exam)
 	if result.Error != nil {
-		return result.Error
+		log.Fatalln(result.Error)
 	}
-	return nil
+	return e
+}
+
+// func (e *Exam) CreateExam() *Exam {
+// 	db.NewRecord(e)
+// 	db.Create(&e)
+// 	return e
+// }
+
+func GetExams() []Exam {
+	var Exams []Exam
+	db.Find(&Exams)
+	return Exams
+}
+
+func GetExamById(Id int64) (*Exam, *gorm.DB) {
+	var getExam Exam
+	db := db.Where("ID=?", Id).Find(&getExam)
+	return &getExam, db
+}
+
+func DeleteBook(ID int64) Exam {
+	var Exam Exam
+	db.Where("ID=?", ID).Delete(Exam)
+	return Exam
 }
