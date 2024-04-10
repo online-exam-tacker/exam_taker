@@ -12,37 +12,46 @@ type Tags struct {
 type User struct {
 	gorm.Model
 	Id       int    `gorm:"type:int;primary_key"`
-	Exams    []Exam `gorm:"foreignKey:Exam_ID"`
+	Exams    []Exam `gorm:"foreignKey:ExamID"`
 	Password string
 }
 
-type Type struct {
-	Four_option_exam string
-	One_option_exam  string
-}
-
 type Exam struct {
-	Exam_ID   uint `gorm:"primary_key"`
-	Type      Type
-	Questions []Questions `gorm:"foreignKey:Question_ID"`
-
-	Name string
+	ExamID   uint       `gorm:"primary_key"`
+	Question []Question `gorm:"foreignKey:ExamID"`
+	Name     string
 }
 
-type Responses struct {
-	Response_ID uint
-	Response    string
-	Is_true     bool
+type Response struct {
+	ResponseID uint
+	Response   string
+	IsTrue     bool `gorm:"column:istrue"` // Corrected column name to match database
+	QuestionID uint // Added foreign key field to establish the relationship
 }
 
-type Questions struct {
-	Question_ID uint `gorm:"primary_key"`
-	Answer_ID   int  `gorm:"foreignKey:Answer_ID"`
-	Title       string
-	Responses   []Responses
+type Question struct {
+	QuestionID uint `gorm:"primary_key"`
+	Title      string
+	Responses  []Response `gorm:"foreignKey:QuestionID"` // Specifying foreign key for Responses
+	ExamID     uint       // Added foreign key field to establish the relationship
 }
 
-// type Answer struct {
-// 	Answer_ID uint `gorm:"primary_key"`
-// 	Answer    string
+// type Exam struct {
+// 	ExamID uint `gorm:"primary_key"`
+
+// 	question []question `gorm:"foreignKey:QuestionID"`
+
+// 	Name string
+// }
+
+// type Responses struct {
+// 	ResponseID uint
+// 	Response   string
+// 	Is_true    bool
+// }
+
+// type question struct {
+// 	QuestionID uint `gorm:"primary_key"`
+// 	Title      string
+// 	Responses  []Responses
 // }

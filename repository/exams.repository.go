@@ -60,7 +60,7 @@ func (t *ExamsRepositoryImpl) FindById(examsId int) (exams model.Exam, err error
 // // Update implements TagsRepository
 func (t *ExamsRepositoryImpl) Update(exams model.Exam) {
 	var updateTag = request.UpdateTagsRequest{
-		Id:   int(exams.Exam_ID),
+		Id:   int(exams.ExamID),
 		Name: exams.Name,
 	}
 	result := t.Db.Model(&exams).Updates(updateTag)
