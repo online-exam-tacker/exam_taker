@@ -34,11 +34,36 @@ func NewExamServiceImpl(ExamsRepository repository.ExamsRepository, validate *va
 func (t *ExamsServiceImpl) Create(exams request.CreateExamRequest) {
 	err := t.Validate.Struct(exams)
 	helper.ErrorPanic(err)
+
+	var responses []model.Responses
+	for _, q := range exams.Questions {
+		for _, r := range q.Responses {
+			responses = append(responses, model.Responses{
+				Response: r.Response,
+				Is_true:  r.Is_true,
+			})
+		}
+	}
+
+	var questions []model.Questions
+	for _, q := range exams.Questions {
+		questions = append(questions, model.Questions{
+			Title:     q.Title,
+			Responses: responses, // Assign the responses to each question
+		})
+	}
+
+	TypeModel := model.Type{
+		Four_option_exam: "four_option_exam",
+		One_option_exam:  "one_option_exam",
+	}
+
 	examModel := model.Exam{
 		Name:      exams.Name,
-		Type:      exams.Type,
-		Questions: exams.Questions,
+		Type:      TypeModel,
+		Questions: questions, // Assign the questions to the exam
 	}
+
 	t.ExamsRepository.Save(examModel)
 }
 

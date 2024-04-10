@@ -31,18 +31,20 @@ func main() {
 	db.Table("tags").AutoMigrate(&model.Tags{})
 
 	// Repository
-	tagsRepository := repository.NewTagsREpositoryImpl(db)
+	// tagsRepository := repository.NewTagsREpositoryImpl(db)
 	examRepositpry := repository.NewExamsREpositoryImpl(db)
 
 	// Service
-	tagsService := service.NewTagsServiceImpl(tagsRepository, validate)
+	// tagsService := service.NewTagsServiceImpl(tagsRepository, validate)
+	examsService := service.NewExamServiceImpl(examRepositpry, validate)
 
 	// Controller
-	tagsController := controller.NewTagsController(tagsService)
+	// tagsController := controller.NewTagsController(tagsService)
+	examsController := controller.NewExamsController(examsService)
 
 	// Router
-	routes := router.NewRouter(tagsController)
-
+	// routes := router.NewRouter(tagsController)
+	routes := router.NewRouter(examsController)
 	server := &http.Server{
 		Addr:    ":8888",
 		Handler: routes,

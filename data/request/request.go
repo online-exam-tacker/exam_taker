@@ -15,8 +15,8 @@ type Type struct {
 }
 
 type Question struct {
-	Question_title string
-	Responses      [4]Response
+	Title     string
+	Responses [4]Response `validate:"required"`
 }
 
 type Response struct {

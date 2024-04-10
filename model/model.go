@@ -24,22 +24,22 @@ type Type struct {
 type Exam struct {
 	Exam_ID   uint `gorm:"primary_key"`
 	Type      Type
-	Questions []Question `gorm:"foreignKey:Question_ID"`
-	Responses []Response `gorm:"foreignKey:Response_ID"`
-	Name      string
+	Questions []Questions `gorm:"foreignKey:Question_ID"`
+
+	Name string
 }
 
-type Response struct {
+type Responses struct {
 	Response_ID uint
 	Response    string
 	Is_true     bool
 }
 
-type Question struct {
-	Question_ID    uint `gorm:"primary_key"`
-	Answer_ID      int  `gorm:"foreignKey:Answer_ID"`
-	Question_title string
-	Responses      [4]Response
+type Questions struct {
+	Question_ID uint `gorm:"primary_key"`
+	Answer_ID   int  `gorm:"foreignKey:Answer_ID"`
+	Title       string
+	Responses   []Responses
 }
 
 // type Answer struct {
