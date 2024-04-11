@@ -34,7 +34,7 @@ func (t *ExamsRepositoryImpl) Save(exams model.Exam) {
 // Delete implements TagsRepository
 func (t *ExamsRepositoryImpl) Delete(examsId int) {
 	var exams model.Exam
-	result := t.Db.Where("id = ?", examsId).Delete(&exams)
+	result := t.Db.Where("exam_id = ?", examsId).Delete(&exams)
 	helper.ErrorPanic(result.Error)
 }
 
@@ -53,16 +53,16 @@ func (t *ExamsRepositoryImpl) FindById(examsId int) (exams model.Exam, err error
 	if result != nil {
 		return exam, nil
 	} else {
-		return exam, errors.New("tag is not found")
+		return exam, errors.New("exam is not found")
 	}
 }
 
 // // Update implements TagsRepository
 func (t *ExamsRepositoryImpl) Update(exams model.Exam) {
-	var updateTag = request.UpdateTagsRequest{
+	var updateExam = request.UpdateTagsRequest{
 		Id:   int(exams.ExamID),
 		Name: exams.Name,
 	}
-	result := t.Db.Model(&exams).Updates(updateTag)
+	result := t.Db.Model(&exams).Updates(updateExam)
 	helper.ErrorPanic(result.Error)
 }

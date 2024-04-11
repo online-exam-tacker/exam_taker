@@ -2,7 +2,7 @@ package service
 
 import (
 	"hamideh/data/request"
-	// "hamideh/data/response"
+	"hamideh/data/response"
 	"hamideh/helper"
 	"hamideh/model"
 	"hamideh/repository"
@@ -12,10 +12,10 @@ import (
 
 type ExamsService interface {
 	Create(exams request.CreateExamRequest)
-	// Update(tags request.UpdateTagsRequest)
-	// Delete(tagsId int)
-	// FindById(tagsId int) response.TagsResponse
-	// FindAll() []response.TagsResponse
+	// Update(exams request.UpdateTagsRequest)
+	Delete(examsId int)
+	// FindById(examsId int) response.TagsResponse
+	FindAll() []response.ExamResponse
 }
 
 type ExamsServiceImpl struct {
@@ -30,7 +30,6 @@ func NewExamServiceImpl(ExamsRepository repository.ExamsRepository, validate *va
 	}
 }
 
-// Create implements TagsService
 func (t *ExamsServiceImpl) Create(exams request.CreateExamRequest) {
 	err := t.Validate.Struct(exams)
 	helper.ErrorPanic(err)
@@ -44,7 +43,6 @@ func (t *ExamsServiceImpl) Create(exams request.CreateExamRequest) {
 			})
 		}
 	}
-
 	var question []model.Question
 	for _, q := range exams.Question {
 		question = append(question, model.Question{
@@ -52,40 +50,61 @@ func (t *ExamsServiceImpl) Create(exams request.CreateExamRequest) {
 			Responses: responses, // Assign the responses to each question
 		})
 	}
-
 	examModel := model.Exam{
-		Name: exams.Name,
-
+		Name:     exams.Name,
 		Question: question, // Assign the question to the exam
 	}
-
 	t.ExamsRepository.Save(examModel)
 }
 
-// Delete implements TagsService
-// func (t *TagsServiceImpl) Delete(tagsId int) {
-// 	t.TagsRepository.Delete(tagsId)
-// }
+func (t *ExamsServiceImpl) Delete(examsId int) {
+	t.ExamsRepository.Delete(examsId)
+}
 
-// // FindAll implements TagsService
-// func (t *TagsServiceImpl) FindAll() []response.TagsResponse {
-// 	result := t.TagsRepository.FindAll()
+func (t *ExamsServiceImpl) FindAll() []response.ExamResponse {
+	// Retrieve exam data from repository
+	examData := t.ExamsRepository.FindAll()
 
-// 	var tags []response.TagsResponse
-// 	for _, value := range result {
-// 		tag := response.TagsResponse{
-// 			Id:   value.Id,
-// 			Name: value.Name,
-// 		}
-// 		tags = append(tags, tag)
+	// Convert repository data to response format
+	var exams []response.ExamResponse
+	for _, exam := range examData {
+		var questions []response.Question
+		for _, q := range exam.Question {
+			var responses []response.ModelResponse
+			for _, r := range q.Responses {
+				responses = append(responses, response.ModelResponse{
+					Response: r.Response,
+					IsTrue:   r.IsTrue,
+				})
+			}
+			questions = append(questions, response.Question{
+				Title:     q.Title,
+				Responses: [4]response.ModelResponse(responses),
+			})
+		}
+		exams = append(exams, response.ExamResponse{
+			Name:     exam.Name,
+			Question: questions, // Assuming the field in ExamResponse is Questions
+		})
+	}
+	return exams
+}
+
+// result := t.ExamsRepository.FindAll()
+
+// var exam []response.ExamResponse
+// for _, value := range result {
+// 	exam := response.ExamResponse{
+// 		Name:     value.Name,
+// 		Question: value.Question,
 // 	}
-
-// 	return tags
+// 	tags = append(tags, tag)
 // }
 
-// // FindById implements TagsService
-// func (t *TagsServiceImpl) FindById(tagsId int) response.TagsResponse {
-// 	tagData, err := t.TagsRepository.FindById(tagsId)
+// return tags
+
+// func (t *ExamsServiceImpl) FindById(examsId int) response.TagsResponse {
+// 	tagData, err := t.ExamsRepository.FindById(examsId)
 // 	helper.ErrorPanic(err)
 
 // 	tagResponse := response.TagsResponse{
@@ -95,10 +114,9 @@ func (t *ExamsServiceImpl) Create(exams request.CreateExamRequest) {
 // 	return tagResponse
 // }
 
-// // Update implements TagsService
-// func (t *TagsServiceImpl) Update(tags request.UpdateTagsRequest) {
-// 	tagData, err := t.TagsRepository.FindById(tags.Id)
+// func (t *ExamsServiceImpl) Update(examsId request.UpdateTagsRequest) {
+// 	examData, err := t.ExamsRepository.FindById(exams.Id)
 // 	helper.ErrorPanic(err)
-// 	tagData.Name = tags.Name
-// 	t.TagsRepository.Update(tagData)
+// 	examData.Name = exams.Name
+// 	t.ExamsRepository.Update(examData)
 // }

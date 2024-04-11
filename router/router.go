@@ -19,31 +19,12 @@ func NewRouter(examsController *controller.ExamsController) *gin.Engine {
 		ctx.JSON(http.StatusOK, "welcome home")
 	})
 	baseRouter := router.Group("/api")
-	tagsRouter := baseRouter.Group("/exams")
-	tagsRouter.POST("", examsController.Create)
-	// tagsRouter.GET("", tagsController.FindAll)
-	// tagsRouter.GET("/:tagId", tagsController.FindById)
-	// tagsRouter.PATCH("/:tagId", tagsController.Update)
-	// tagsRouter.DELETE("/:tagId", tagsController.Delete)
+	examsRouter := baseRouter.Group("/exams")
+	examsRouter.POST("", examsController.Create)
+	examsRouter.DELETE("/:examId", examsController.Delete)
+	examsRouter.GET("", examsController.FindAll)
+	examsRouter.GET("/:examId", examsController.FindById)
+	examsRouter.PATCH("/:examId", examsController.Update)
 
 	return router
 }
-
-// func NewRouter(tagsController *controller.TagsController) *gin.Engine {
-// 	router := gin.Default()
-// 	// add swagger
-// 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-// 	router.GET("", func(ctx *gin.Context) {
-// 		ctx.JSON(http.StatusOK, "welcome home")
-// 	})
-// 	baseRouter := router.Group("/api")
-// 	tagsRouter := baseRouter.Group("/tags")
-// 	tagsRouter.GET("", tagsController.FindAll)
-// 	tagsRouter.GET("/:tagId", tagsController.FindById)
-// 	tagsRouter.POST("", tagsController.Create)
-// 	tagsRouter.PATCH("/:tagId", tagsController.Update)
-// 	tagsRouter.DELETE("/:tagId", tagsController.Delete)
-
-// 	return router
-// }

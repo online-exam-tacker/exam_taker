@@ -18,6 +18,7 @@ type Response struct {
 	Response string
 	IsTrue   bool
 }
+
 type CreateExamRequest struct {
 	Name     string
 	Question []Question

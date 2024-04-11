@@ -7,7 +7,7 @@ import (
 	"hamideh/service"
 	"net/http"
 
-	// "strconv"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -85,21 +85,21 @@ func (controller *ExamsController) Create(ctx *gin.Context) {
 // // @Tags			tags
 // // @Success			200 {object} response.Response{}
 // // @Router			/tags/{tagID} [delete]
-// func (controller *TagsController) Delete(ctx *gin.Context) {
-// 	log.Info().Msg("delete tags")
-// 	tagId := ctx.Param("tagId")
-// 	id, err := strconv.Atoi(tagId)
-// 	helper.ErrorPanic(err)
-// 	controller.tagsService.Delete(id)
+func (controller *ExamsController) Delete(ctx *gin.Context) {
+	log.Info().Msg("delete exam")
+	examId := ctx.Param("examId")
+	id, err := strconv.Atoi(examId)
+	helper.ErrorPanic(err)
+	controller.examsService.Delete(id)
 
-// 	webResponse := response.Response{
-// 		Code:   http.StatusOK,
-// 		Status: "Ok",
-// 		Data:   nil,
-// 	}
-// 	ctx.Header("Content-Type", "application/json")
-// 	ctx.JSON(http.StatusOK, webResponse)
-// }
+	webResponse := response.Response{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   nil,
+	}
+	ctx.Header("Content-Type", "application/json")
+	ctx.JSON(http.StatusOK, webResponse)
+}
 
 // // FindByIdTags 		godoc
 // // @Summary				Get Single tags by id.
