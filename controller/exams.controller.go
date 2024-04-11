@@ -132,15 +132,15 @@ func (controller *ExamsController) Delete(ctx *gin.Context) {
 // // @Tags			tags
 // // @Success			200 {obejct} response.Response{}
 // // @Router			/tags [get]
-// func (controller *TagsController) FindAll(ctx *gin.Context) {
-// 	log.Info().Msg("findAll tags")
-// 	tagResponse := controller.tagsService.FindAll()
-// 	webResponse := response.Response{
-// 		Code:   http.StatusOK,
-// 		Status: "Ok",
-// 		Data:   tagResponse,
-// 	}
-// 	ctx.Header("Content-Type", "application/json")
-// 	ctx.JSON(http.StatusOK, webResponse)
+func (controller *ExamsController) FindAll(ctx *gin.Context) {
+	log.Info().Msg("findAll tags")
+	examResponse := controller.examsService.FindAll()
+	webResponse := response.Response{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   examResponse,
+	}
+	ctx.Header("Content-Type", "application/json")
+	ctx.JSON(http.StatusOK, webResponse)
 
-// }
+}

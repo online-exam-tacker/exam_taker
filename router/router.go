@@ -23,8 +23,8 @@ func NewRouter(examsController *controller.ExamsController) *gin.Engine {
 	examsRouter.POST("", examsController.Create)
 	examsRouter.DELETE("/:examId", examsController.Delete)
 	examsRouter.GET("", examsController.FindAll)
-	examsRouter.GET("/:examId", examsController.FindById)
-	examsRouter.PATCH("/:examId", examsController.Update)
+	// examsRouter.GET("/:examId", examsController.FindById)
+	// examsRouter.PATCH("/:examId", examsController.Update)
 
 	return router
 }
