@@ -20,6 +20,13 @@ type Response struct {
 }
 
 type CreateExamRequest struct {
+	Id       int
+	Name     string
+	Question []Question
+}
+
+type UpdateExamRequest struct {
+	Id       int
 	Name     string
 	Question []Question
 }

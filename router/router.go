@@ -10,7 +10,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func NewRouter(examsController *controller.ExamsController) *gin.Engine {
+func ExamRouter(examsController *controller.ExamsController) *gin.Engine {
 	router := gin.Default()
 	// add swagger
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -23,8 +23,18 @@ func NewRouter(examsController *controller.ExamsController) *gin.Engine {
 	examsRouter.POST("", examsController.Create)
 	examsRouter.DELETE("/:examId", examsController.Delete)
 	examsRouter.GET("", examsController.FindAll)
-	// examsRouter.GET("/:examId", examsController.FindById)
-	// examsRouter.PATCH("/:examId", examsController.Update)
+	examsRouter.GET("/:examId", examsController.FindById)
+	examsRouter.PATCH("/:examId", examsController.Update)
+
+	return router
+}
+
+func UserRouter(userController *controller.UsersController) *gin.Engine {
+	router := gin.Default()
+
+	baseRouter := router.Group("/api")
+	usersRouter := baseRouter.Group("/users")
+	usersRouter.POST("", userController.Create)
 
 	return router
 }

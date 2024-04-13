@@ -22,6 +22,7 @@ type Question struct {
 }
 
 type ExamResponse struct {
+	Id       int
 	Name     string
 	Question []Question
 }

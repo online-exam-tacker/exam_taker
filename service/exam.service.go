@@ -12,9 +12,9 @@ import (
 
 type ExamsService interface {
 	Create(exams request.CreateExamRequest)
-	// Update(exams request.UpdateTagsRequest)
+	Update(exams request.UpdateExamRequest)
 	Delete(examsId int)
-	// FindById(examsId int) response.TagsResponse
+	FindById(examsId int) response.ExamResponse
 	FindAll() []response.ExamResponse
 }
 
@@ -83,6 +83,7 @@ func (t *ExamsServiceImpl) FindAll() []response.ExamResponse {
 			})
 		}
 		exams = append(exams, response.ExamResponse{
+			Id:       int(exam.ExamID),
 			Name:     exam.Name,
 			Question: questions, // Assuming the field in ExamResponse is Questions
 		})
@@ -90,33 +91,37 @@ func (t *ExamsServiceImpl) FindAll() []response.ExamResponse {
 	return exams
 }
 
-// result := t.ExamsRepository.FindAll()
+func (t *ExamsServiceImpl) FindById(examsId int) response.ExamResponse {
+	examData, err := t.ExamsRepository.FindById(examsId)
+	helper.ErrorPanic(err)
 
-// var exam []response.ExamResponse
-// for _, value := range result {
-// 	exam := response.ExamResponse{
-// 		Name:     value.Name,
-// 		Question: value.Question,
-// 	}
-// 	tags = append(tags, tag)
-// }
+	var questions []response.Question
+	for _, q := range examData.Question {
+		var responses []response.ModelResponse
+		for _, r := range q.Responses {
+			responses = append(responses, response.ModelResponse{
+				Response: r.Response,
+				IsTrue:   r.IsTrue,
+			})
+		}
+		questions = append(questions, response.Question{
+			Title:     q.Title,
+			Responses: [4]response.ModelResponse(responses),
+		})
+	}
 
-// return tags
+	examResponse := response.ExamResponse{
+		Id:       int(examData.ExamID),
+		Name:     examData.Name,
+		Question: questions,
+	}
+	return examResponse
+}
 
-// func (t *ExamsServiceImpl) FindById(examsId int) response.TagsResponse {
-// 	tagData, err := t.ExamsRepository.FindById(examsId)
-// 	helper.ErrorPanic(err)
+func (t *ExamsServiceImpl) Update(examsId request.UpdateExamRequest) {
+	examData, err := t.ExamsRepository.FindById(examsId.Id)
+	helper.ErrorPanic(err)
+	examData.Name = examsId.Name
 
-// 	tagResponse := response.TagsResponse{
-// 		Id:   tagData.Id,
-// 		Name: tagData.Name,
-// 	}
-// 	return tagResponse
-// }
-
-// func (t *ExamsServiceImpl) Update(examsId request.UpdateTagsRequest) {
-// 	examData, err := t.ExamsRepository.FindById(exams.Id)
-// 	helper.ErrorPanic(err)
-// 	examData.Name = exams.Name
-// 	t.ExamsRepository.Update(examData)
-// }
+	t.ExamsRepository.Update(examData)
+}

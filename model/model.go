@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"gorm.io/gorm"
 )
 
@@ -14,6 +15,9 @@ type User struct {
 	Id       int    `gorm:"type:int;primary_key"`
 	Exams    []Exam `gorm:"foreignKey:ExamID"`
 	Password string
+	Username string `json:"username"`
+	Role     string
+	jwt.StandardClaims
 }
 
 type Exam struct {

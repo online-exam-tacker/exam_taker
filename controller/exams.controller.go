@@ -56,27 +56,27 @@ func (controller *ExamsController) Create(ctx *gin.Context) {
 // // @Produce			application/json
 // // @Success			200 {object} response.Response{}
 // // @Router			/tags/{tagId} [patch]
-// func (controller *TagsController) Update(ctx *gin.Context) {
-// 	log.Info().Msg("update tags")
-// 	updateTagsRequest := request.UpdateTagsRequest{}
-// 	err := ctx.ShouldBindJSON(&updateTagsRequest)
-// 	helper.ErrorPanic(err)
+func (controller *ExamsController) Update(ctx *gin.Context) {
+	log.Info().Msg("update exam")
+	updateExamRequest := request.UpdateExamRequest{}
+	err := ctx.ShouldBindJSON(&updateExamRequest)
+	helper.ErrorPanic(err)
 
-// 	tagId := ctx.Param("tagId")
-// 	id, err := strconv.Atoi(tagId)
-// 	helper.ErrorPanic(err)
-// 	updateTagsRequest.Id = id
+	examId := ctx.Param("examId")
+	id, err := strconv.Atoi(examId)
+	helper.ErrorPanic(err)
+	updateExamRequest.Id = id
 
-// 	controller.tagsService.Update(updateTagsRequest)
+	controller.examsService.Update(updateExamRequest)
 
-// 	webResponse := response.Response{
-// 		Code:   http.StatusOK,
-// 		Status: "Ok",
-// 		Data:   nil,
-// 	}
-// 	ctx.Header("Content-Type", "application/json")
-// 	ctx.JSON(http.StatusOK, webResponse)
-// }
+	webResponse := response.Response{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   nil,
+	}
+	ctx.Header("Content-Type", "application/json")
+	ctx.JSON(http.StatusOK, webResponse)
+}
 
 // // DeleteTags		godoc
 // // @Summary			Delete tags
@@ -109,22 +109,22 @@ func (controller *ExamsController) Delete(ctx *gin.Context) {
 // // @Tags				tags
 // // @Success				200 {object} response.Response{}
 // // @Router				/tags/{tagId} [get]
-// func (controller *TagsController) FindById(ctx *gin.Context) {
-// 	log.Info().Msg("findbyid tags")
-// 	tagId := ctx.Param("tagId")
-// 	id, err := strconv.Atoi(tagId)
-// 	helper.ErrorPanic(err)
+func (controller *ExamsController) FindById(ctx *gin.Context) {
+	log.Info().Msg("findbyid tags")
+	examId := ctx.Param("examId")
+	id, err := strconv.Atoi(examId)
+	helper.ErrorPanic(err)
 
-// 	tagResponse := controller.tagsService.FindById(id)
+	examResponse := controller.examsService.FindById(id)
 
-// 	webResponse := response.Response{
-// 		Code:   http.StatusOK,
-// 		Status: "Ok",
-// 		Data:   tagResponse,
-// 	}
-// 	ctx.Header("Content-Type", "application/json")
-// 	ctx.JSON(http.StatusOK, webResponse)
-// }
+	webResponse := response.Response{
+		Code:   http.StatusOK,
+		Status: "Ok",
+		Data:   examResponse,
+	}
+	ctx.Header("Content-Type", "application/json")
+	ctx.JSON(http.StatusOK, webResponse)
+}
 
 // // FindAllTags 		godoc
 // // @Summary			Get All tags.

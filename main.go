@@ -46,8 +46,8 @@ func main() {
 	examsController := controller.NewExamsController(examsService)
 
 	// Router
-	// routes := router.NewRouter(tagsController)
-	routes := router.NewRouter(examsController)
+	// routes := router.ExamRouter(tagsController)
+	routes := router.ExamRouter(examsController)
 	server := &http.Server{
 		Addr:    ":8888",
 		Handler: routes,
